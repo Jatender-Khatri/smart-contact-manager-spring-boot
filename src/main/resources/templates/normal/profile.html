@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="normal/base::layout(~{::section})">
+<head>
+<meta charset="ISO-8859-1">
+<title>This is the About</title>
+</head>
+<body>
+	<section>
+
+		<div class="container">
+			<div class="card">
+				<div class="card-body">
+					<div class="container text-center">
+						<img style="height: 200px; width: 200px"
+							class="my_profile_picture" alt="profile_image"
+							th:src="@{'/image/'+${user.photoURL}}">
+					</div>
+					<h1 class="text-center mt-3" th:text="${user.username}"></h1>
+
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col">User Id</th>
+								<th scope="col">SCMUSER<span th:text="${user.userId}"></span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th scope="row">Email</th>
+								<td><span th:text="${user.email}"></span></td>
+							</tr>
+							<tr>
+								<th scope="row">Role</th>
+								<td><span th:text="${user.role}"></span></td>
+							</tr>
+							<tr>
+								<th scope="row">Account Active</th>
+								<td><span th:text="${user.enable}"></span></td>
+							</tr>
+							<tr>
+								<th scope="row">About</th>
+								<td><span th:text="${user.about}"></span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+	</section>
+
+</body>
+</html>

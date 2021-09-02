@@ -12,6 +12,10 @@
 	rel="stylesheet"
 	integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
 	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+	integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link
 	href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
 	rel="stylesheet" id="bootstrap-css">
@@ -21,7 +25,7 @@
 </head>
 <body>
 	<!-- Nav Bar -->
-	<nav class="navbar navbar-expand-lg navbar-dark bg-light bg-primary">
+	<nav class="fixed-top navbar navbar-expand-lg navbar-dark bg-primary">
 		<div class="container-fluid">
 			<a class="navbar-brand" href="#">Smart Contact Manager</a>
 			<button class="navbar-toggler" type="button"
@@ -34,23 +38,49 @@
 				<ul class="navbar-nav ml-auto text-uppercase">
 					<li class="nav-item"><a class="nav-link active"
 						aria-current="page" th:href="@{/}">Home</a></li>
-					<li class="nav-item"><a class="nav-link active" href="#">About</a></li>
+					<!-- <li class="nav-item"><a class="nav-link active" href="#">About</a></li> -->
 					<li class="nav-item"><a class="nav-link active"
-						aria-current="page" href="/user/index">Login</a></li>
+						aria-current="page"><span th:text="${user.username}"></span></a></li>
 					<li class="nav-item"><a class="nav-link active"
-						th:href="@{/signup}">Signup</a></li>
+						th:href="@{/logout}">Logout</a></li>
 					<!-- <li class="nav-item"><a class="nav-link " href="#"
 						tabindex="-1" aria-disabled="true">Login</a></li>
 					<li class="nav-item"><a class="nav-link " href="#"
-						tabindex="-1" aria-disabled="true">Signup</a></li> -->
+						tabindex="-1" aria-disabled="true">Logout</a></li> -->
 
 				</ul>
 
 			</div>
 		</div>
 	</nav>
-	
-	<div th:replace="${content}"></div>
+	<!-- sidebar -->
+	<div class="sidebar mt-2">
+		<span onclick="toggleSidebar()" class="crossBtn">&times;</span> <a
+			th:href="@{/user/index}" class="item"><i class="fas fa-home"></i>
+			Home</a> <a th:href="@{/user/show_contacts/0}" class="item"><i
+			class="fas fa-id-card-alt"></i> View Contacts</a> <a
+			th:href="@{/user/add-contact}" class="item"><i
+			class="fas fa-pencil-alt"></i> Add Contact</a> <a th:href="@{/user/profile}" class="item"><i
+			class="fas fa-user-circle"></i> Your Profile</a> <a href="#" class="item"><i
+			class="fas fa-user-cog"></i> Setting</a> <a th:href="@{/logout}"
+			class="item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+		<div class="divider"></div>
+	</div>
+	<!-- end side bar -->
+	<!-- Content Area -->
+	<div class="content mt-5">
+		<i onclick="toggleSidebar()" class="fas fa-bars m-3"></i>
+		<!-- Message Show  -->
+		<div th:if="${session.message}" class="container">
+			<div th:classappend="${'alert-'+session.message.type}"
+				class="alert text-center">
+				<span th:text="${session.message.content}"></span>
+			</div>
+			<th:block th:text="${#session.removeAttribute('message')}"></th:block>
+		</div>
+		<div th:replace="${content}"></div>
+	</div>
+
 	<!-- Optional JavaScript; choose one of the two! -->
 
 	<!-- Option 1: Bootstrap Bundle with Popper -->
@@ -60,7 +90,8 @@
 		crossorigin="anonymous"></script>
 
 	<!-- Option 2: Separate Popper and Bootstrap JS -->
-
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
 		integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp"
@@ -71,5 +102,26 @@
 		crossorigin="anonymous"></script>
 
 	<script type="text/javascript" th:src="@{/js/myjs.js}"></script>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<script>
+		function deleteContact(cid)
+		{
+			swal({
+				  title: "Are you sure?",
+				  text: "Do you Want Delete this Contact..",
+				  icon: "warning",
+				  buttons: true,
+				  dangerMode: true,
+				})
+				.then((willDelete) => {
+				  if (willDelete) {
+				    window.location="/user/delete/"+cid;
+				   
+				  } else {
+				    swal("Your Contact is Safe !!");
+				  }
+				});
+		}
+	</script>
 </body>
 </html>

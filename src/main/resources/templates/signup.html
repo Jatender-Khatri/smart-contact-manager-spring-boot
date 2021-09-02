@@ -10,7 +10,11 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-8 offset-md-2">
-					<div class="my-card mt-3">
+					<div class="my-card mt-2">
+					<div th:if = "${session.message}" th:classappend="${session.message.type}" class="alert" role="alert">
+  						<p class="text-center" th:text="${session.message.content}"></p>
+  						<th:block th:text="${#session.removeAttribute('message')}"></th:block>
+					</div>
 						<div class="container text-center">
 							<img class="" style="width: 80px" src="" th:src="@{/image/signupphoto.png}">
 						</div>

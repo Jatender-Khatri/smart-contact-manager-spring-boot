@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "CONTACT")
 public class Contact {
@@ -24,6 +26,7 @@ public class Contact {
 	@Column(length = 500)
 	private String description;
 	@ManyToOne
+	@JsonIgnore
 	private User user;
 
 	/**
@@ -186,7 +189,18 @@ public class Contact {
 	@Override
 	public String toString() {
 		return "Contact [cId=" + cId + ", name=" + name + ", nickName=" + nickName + ", work=" + work + ", email="
-				+ email + ", phone=" + phone + ", imageURL=" + imageURL + ", description=" + description + "]";
+				+ email + ", phone=" + phone + ", imageURL=" + imageURL + ", description=" + description + ", user="
+				+ user + "]";
 	}
+
+	/**
+	 * @param obj
+	 * @return
+	 * @see java.lang.Integer#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		return this.cId==((Contact)obj).getcId();
+	}
+	
 
 }
