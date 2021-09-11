@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
-import java.util.List;
+
 import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
@@ -16,6 +16,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +36,8 @@ import com.smart.helper.MessageHelper;
 @Controller
 @RequestMapping("/user")
 public class UserController {
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	@Autowired
 	private UserRepository repository;
 	@Autowired
@@ -163,9 +166,9 @@ public class UserController {
 			if (!file.isEmpty()) {
 				// Delete Old Photo Form Computer
 				File deleteFile = new ClassPathResource("static/image").getFile();
-				File file2 = new File(deleteFile,oldContactDetail.getImageURL());
+				File file2 = new File(deleteFile, oldContactDetail.getImageURL());
 				file2.delete();
-				//Update New Photo
+				// Update New Photo
 				File saveFile = new ClassPathResource("static/image").getFile();
 				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + file.getOriginalFilename());
 				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
@@ -183,10 +186,38 @@ public class UserController {
 		}
 		return "redirect:/user/" + contact.getcId() + "/contact";
 	}
+
 	@GetMapping("/profile")
-	public String yourProfile(Model model)
-	{
+	public String yourProfile(Model model) {
 		model.addAttribute("title", "User-Profile");
 		return "normal/profile";
+	}
+
+	// Open Setting
+	@GetMapping("/settings")
+	public String opneSetting() {
+		return "normal/settings";
+	}
+	// Change Password Handler
+	@PostMapping("/change-password")
+	public String changePassword(@RequestParam("oldPassword") String oldPassword,
+			@RequestParam("newPassword") String newPassword, Principal principal, HttpSession session) {
+		System.out.println("Old Password : " + oldPassword);
+		System.out.println("New Password : " + newPassword);
+		String userName = principal.getName();
+		User currentUser = this.repository.getUserByUserName(userName);
+		System.out.println("Current User Name : " + currentUser.getPassword());
+		
+		if(this.bCryptPasswordEncoder.matches(oldPassword, currentUser.getPassword()))
+		{
+			currentUser.setPassword(this.bCryptPasswordEncoder.encode(newPassword));
+			this.repository.save(currentUser);
+			session.setAttribute("message", new MessageHelper("Your Password Successfully Change","success"));
+		}
+		else {
+			session.setAttribute("message", new MessageHelper("Please Enter correct Old Password !!","danger"));
+			return "redirect:/user/settings";
+		}
+		return "redirect:/user/index";
 	}
 }

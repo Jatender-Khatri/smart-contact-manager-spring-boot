@@ -36,17 +36,13 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav ml-auto text-uppercase">
-					<li class="nav-item"><a class="nav-link active"
+					<li class="nav-item"><a  class="nav-link active"
 						aria-current="page" th:href="@{/}">Home</a></li>
 					<!-- <li class="nav-item"><a class="nav-link active" href="#">About</a></li> -->
 					<li class="nav-item"><a class="nav-link active"
 						aria-current="page"><span th:text="${user.username}"></span></a></li>
 					<li class="nav-item"><a class="nav-link active"
 						th:href="@{/logout}">Logout</a></li>
-					<!-- <li class="nav-item"><a class="nav-link " href="#"
-						tabindex="-1" aria-disabled="true">Login</a></li>
-					<li class="nav-item"><a class="nav-link " href="#"
-						tabindex="-1" aria-disabled="true">Logout</a></li> -->
 
 				</ul>
 
@@ -61,7 +57,7 @@
 			class="fas fa-id-card-alt"></i> View Contacts</a> <a
 			th:href="@{/user/add-contact}" class="item"><i
 			class="fas fa-pencil-alt"></i> Add Contact</a> <a th:href="@{/user/profile}" class="item"><i
-			class="fas fa-user-circle"></i> Your Profile</a> <a href="#" class="item"><i
+			class="fas fa-user-circle"></i> Your Profile</a> <a  th:href="@{/user/settings}" class="item"><i
 			class="fas fa-user-cog"></i> Setting</a> <a th:href="@{/logout}"
 			class="item"><i class="fas fa-sign-out-alt"></i> Logout</a>
 		<div class="divider"></div>
